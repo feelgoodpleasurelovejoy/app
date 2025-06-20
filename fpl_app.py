@@ -3,7 +3,6 @@ from datetime import datetime
 
 st.set_page_config(page_title="Feelgood Pleasure Lovejoy App", layout="wide")
 
-# Joy bar CSS & HTML (using st.markdown with unsafe_allow_html)
 def joy_bar_html(value):
     val = max(0, min(value, 10))
     height_percent = (val / 10) * 100
@@ -49,7 +48,6 @@ def joy_bar_html(value):
     </div>
     """
 
-# Title & subtitle
 st.markdown("""
 <div style='font-family: Arial Black, sans-serif; color:black;'>
     <h2>Feelgood Pleasure Lovejoy App</h2>
@@ -57,7 +55,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Layout: two columns - left for joy bar & input, right for entries
 left_col, right_col = st.columns([1,4])
 
 with left_col:
@@ -65,7 +62,6 @@ with left_col:
     st.markdown(joy_bar_html(joy_value), unsafe_allow_html=True)
 
 with right_col:
-    # Initialize session state lists if not present
     if 'joy10' not in st.session_state:
         st.session_state.joy10 = []
     if 'big_lever' not in st.session_state:
@@ -79,7 +75,6 @@ with right_col:
     if 'show_help' not in st.session_state:
         st.session_state.show_help = False
 
-    # Display entries helpers
     def display_entry_list(entries, can_upgrade=False):
         remove_idx = None
         move_to_big = None
@@ -112,13 +107,11 @@ with right_col:
             else:
                 st.warning("Max 2 Big Lever entries reached.")
 
-    # Callbacks for adding entries
     def add_joy10_callback():
         new_entry = st.session_state.new_joy10.strip()
         if new_entry:
             st.session_state.joy10.append({'id': f"joy10_{len(st.session_state.joy10)}", 'text': new_entry, 'locked': False})
             st.session_state.new_joy10 = ""
-            st.experimental_rerun()
 
     def add_big_lever_callback():
         new_entry = st.session_state.new_big_lever.strip()
@@ -126,7 +119,6 @@ with right_col:
             if len(st.session_state.big_lever) < 2:
                 st.session_state.big_lever.append({'id': f"big_lever_{len(st.session_state.big_lever)}", 'text': new_entry, 'locked': False})
                 st.session_state.new_big_lever = ""
-                st.experimental_rerun()
             else:
                 st.warning("Max 2 Big Lever entries reached.")
 
@@ -136,21 +128,19 @@ with right_col:
         if new_entry:
             st.session_state.now.append({'id': f"now_{len(st.session_state.now)}", 'text': new_entry, 'duration': dur, 'locked': False})
             st.session_state.now_text = ""
-            st.experimental_rerun()
 
-    # 10/10 Joy Life Section
     st.markdown("### 🌹 10/10 Joy Life")
     st.text_input("Add 10/10 Entry", key="new_joy10")
     st.button("Add 10/10 Entry", on_click=add_joy10_callback)
+
     display_entry_list(st.session_state.joy10, can_upgrade=True)
 
-    # Big Lever Section
     st.markdown("### 🔨 Big Lever (max 2)")
     st.text_input("Add Big Lever Entry", key="new_big_lever")
     st.button("Add Big Lever", on_click=add_big_lever_callback)
+
     display_entry_list(st.session_state.big_lever)
 
-    # Now Section
     st.markdown("### ✨ Now")
     st.text_input("Add Joy Chore", key="now_text", value=st.session_state.now_text)
     st.selectbox("Duration", options=["once", "daily", "weekly"], index=["once","daily","weekly"].index(st.session_state.now_duration), key="now_duration")
@@ -175,7 +165,6 @@ with right_col:
 
     display_now_entries()
 
-    # Help popup logic
     def toggle_help():
         st.session_state.show_help = not st.session_state.show_help
 
